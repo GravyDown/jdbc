@@ -44,7 +44,7 @@ public class OfficerAssignmentPage extends JFrame implements ActionListener {
         if (e.getSource() == assignButton) {
             try (Connection conn = DatabaseConnection.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO Crime_Assignment (report_id, officer_id) VALUES (?, ?)")) {
+                     "INSERT INTO officer_assigned_cases (report_id, officer_id) VALUES (?, ?)")) {
                 stmt.setInt(1, Integer.parseInt(reportIdField.getText()));
                 stmt.setInt(2, Integer.parseInt(officerIdField.getText()));
                 stmt.executeUpdate();

@@ -37,10 +37,10 @@ public class CrimeManagementPage extends JFrame implements ActionListener {
         Connection con = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/crime_system", "root", "garvit27");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
 
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Crime_Reports");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM incident_report");
 
             List<CrimeReport> reports = new ArrayList<>();
             while (rs.next()) {

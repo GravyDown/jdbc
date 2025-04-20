@@ -37,10 +37,10 @@ public class MyReportsPage extends JFrame implements ActionListener {
         Connection con = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/crime_system", "root", "garvit27");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
 
             PreparedStatement stmt = con.prepareStatement(
-                "SELECT * FROM Crime_Reports WHERE citizen_id = (SELECT citizen_id FROM Citizens WHERE user_id = ?)");
+                "SELECT * FROM incident_report WHERE citizen_id = (SELECT citizen_id FROM Citizens WHERE user_id = ?)");
             stmt.setInt(1, user.getUserId());
             ResultSet rs = stmt.executeQuery();
 

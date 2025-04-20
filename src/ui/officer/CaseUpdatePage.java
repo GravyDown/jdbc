@@ -71,12 +71,12 @@ public class CaseUpdatePage extends JFrame implements ActionListener {
             Connection con = null;
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/crime_system", "root", "garvit27");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
                 System.out.println("Database connection successful in CaseUpdatePage");
 
                 // Verify the report is assigned to this officer
                 PreparedStatement checkStmt = con.prepareStatement(
-                    "SELECT COUNT(*) FROM Crime_Assignment WHERE report_id = ? AND officer_id = " +
+                    "SELECT COUNT(*) FROM officer_assigned_cases WHERE report_id = ? AND officer_id = " +
                     "(SELECT officer_id FROM Officers WHERE user_id = ?)");
                 checkStmt.setInt(1, reportId);
                 checkStmt.setInt(2, user.getUserId());
@@ -88,7 +88,7 @@ public class CaseUpdatePage extends JFrame implements ActionListener {
 
                 // Update status
                 PreparedStatement stmt = con.prepareStatement(
-                    "UPDATE Crime_Reports SET status = ? WHERE report_id = ?");
+                    "UPDATE incident_report SET status = ? WHERE report_id = ?");
                 stmt.setString(1, newStatus);
                 stmt.setInt(2, reportId);
                 int rows = stmt.executeUpdate();

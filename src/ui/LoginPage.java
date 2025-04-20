@@ -7,8 +7,8 @@ import model.User;
 import util.PasswordHasher;
 import ui.citizens.CrimeReportPage;
 import ui.admin.AdminDashboard;
-import ui.officer.MyCasesPage;
 import java.sql.*;
+
 
 public class LoginPage extends JFrame implements ActionListener {
     private JTextField emailField;
@@ -80,7 +80,7 @@ public class LoginPage extends JFrame implements ActionListener {
             Connection con = null;
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/crime_system", "root", "garvit27");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
 
                 PreparedStatement stmt = con.prepareStatement(
                     "SELECT * FROM User WHERE user_email = ? AND User_password = ?");
@@ -99,6 +99,7 @@ public class LoginPage extends JFrame implements ActionListener {
                             new ui.admin.AdminDashboard(user);
                             break;
                         case "OFFICER":
+                            //Officer officer = OfficerDAO.getOfficerByUserId(user.getUserId()); // use the ID from the 'user' object
                             new ui.officer.MyCasesPage(user);
                             break;
                         default:

@@ -31,7 +31,7 @@ public class CrimeHeatmapsPage extends JFrame implements ActionListener {
     private void loadHeatmap() {
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT location, COUNT(*) as count FROM Crime_Reports GROUP BY location")) {
+             ResultSet rs = stmt.executeQuery("SELECT location, COUNT(*) as count FROM incident_report GROUP BY location")) {
             StringBuilder sb = new StringBuilder();
             while (rs.next()) {
                 sb.append("Location: ").append(rs.getString("location"))

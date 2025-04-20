@@ -116,7 +116,7 @@ public class CrimeReportPage extends JFrame implements ActionListener {
             Connection con = null;
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/crime_system", "root", "garvit27");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
 
                 PreparedStatement citizenStmt = con.prepareStatement("SELECT citizen_id FROM Citizens WHERE user_id = ?");
                 citizenStmt.setInt(1, user.getUserId());
@@ -128,7 +128,7 @@ public class CrimeReportPage extends JFrame implements ActionListener {
                 int citizenId = rs.getInt("citizen_id");
 
                 PreparedStatement stmt = con.prepareStatement(
-                    "INSERT INTO Crime_Reports (citizen_id, crime_type, description, location, evidence_url, status) " +
+                    "INSERT INTO incident_report (citizen_id, crime_type, description, location, evidence_url, status) " +
                     "VALUES (?, ?, ?, ?, ?, 'PENDING')");
                 stmt.setInt(1, citizenId);
                 stmt.setString(2, crimeType);

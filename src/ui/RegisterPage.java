@@ -397,7 +397,7 @@ public class RegisterPage extends JFrame {
         Connection con = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/crime_system", "root", "garvit27");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
 
             // Check if email exists
             PreparedStatement checkStmt = con.prepareStatement("SELECT COUNT(*) FROM User WHERE user_email = ?");
@@ -425,7 +425,7 @@ public class RegisterPage extends JFrame {
                     int userId = generatedKeys.getInt(1);
                     switch (role) {
                         case "CITIZEN":
-                            PreparedStatement citizenStmt = con.prepareStatement("INSERT INTO Citizens (user_id) VALUES (?)");
+                            PreparedStatement citizenStmt = con.prepareStatement("INSERT INTO Citizen (user_id) VALUES (?)");
                             citizenStmt.setInt(1, userId);
                             citizenStmt.executeUpdate();
                             citizenStmt.close();
@@ -437,7 +437,7 @@ public class RegisterPage extends JFrame {
                             adminStmt.close();
                             break;
                         case "OFFICER":
-                            PreparedStatement officerStmt = con.prepareStatement("INSERT INTO Officers (user_id, department) VALUES (?, 'General')");
+                            PreparedStatement officerStmt = con.prepareStatement("INSERT INTO Officer (user_id, officer_region) VALUES (?, 'Central')");
                             officerStmt.setInt(1, userId);
                             officerStmt.executeUpdate();
                             officerStmt.close();
