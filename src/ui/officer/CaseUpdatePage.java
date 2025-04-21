@@ -8,13 +8,13 @@ import java.sql.*;
 
 public class CaseUpdatePage extends JFrame implements ActionListener {
     private JTextField reportIdField;
-    private JComboBox<String> statusCombo;
+    private JComboBox<String> case_statusCombo;
     private JButton updateButton, backButton;
     private User user;
 
     public CaseUpdatePage(User user) {
         this.user = user;
-        setTitle("Update Case Status");
+        setTitle("Update Case case_status");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -28,9 +28,9 @@ public class CaseUpdatePage extends JFrame implements ActionListener {
         reportIdField = new JTextField();
         formPanel.add(reportIdField);
 
-        formPanel.add(new JLabel("New Status:"));
-        statusCombo = new JComboBox<>(new String[]{"PENDING", "UNDER_INVESTIGATION", "RESOLVED", "CLOSED"});
-        formPanel.add(statusCombo);
+        formPanel.add(new JLabel("New case_status:"));
+        case_statusCombo = new JComboBox<>(new String[]{"PENDING", "UNDER_INVESTIGATION", "RESOLVED", "CLOSED"});
+        formPanel.add(case_statusCombo);
 
         add(formPanel, BorderLayout.CENTER);
 
@@ -53,7 +53,7 @@ public class CaseUpdatePage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == updateButton) {
             String reportIdText = reportIdField.getText().trim();
-            String newStatus = (String) statusCombo.getSelectedItem();
+            String newcase_status = (String) case_statusCombo.getSelectedItem();
 
             if (reportIdText.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Report ID is required!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -86,18 +86,18 @@ public class CaseUpdatePage extends JFrame implements ActionListener {
                     return;
                 }
 
-                // Update status
+                // Update case_status
                 PreparedStatement stmt = con.prepareStatement(
-                    "UPDATE incident_report SET status = ? WHERE report_id = ?");
-                stmt.setString(1, newStatus);
+                    "UPDATE incident_report SET case_status = ? WHERE report_id = ?");
+                stmt.setString(1, newcase_status);
                 stmt.setInt(2, reportId);
                 int rows = stmt.executeUpdate();
 
                 if (rows > 0) {
-                    JOptionPane.showMessageDialog(this, "Case status updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Case case_status updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     reportIdField.setText("");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Failed to update case status: Report ID not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Failed to update case case_status: Report ID not found!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             } catch (ClassNotFoundException ex) {
@@ -105,7 +105,7 @@ public class CaseUpdatePage extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "MySQL JDBC Driver not found!", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error updating case status: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error updating case case_status: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } finally {
                 if (con != null) {
                     try {

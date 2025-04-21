@@ -32,7 +32,7 @@ public class MyCasesPage extends JFrame implements ActionListener {
     private JPanel newCasesPanel;
     private JLabel userInfoLabel;
     private JButton refreshButton, updateButton, detailsButton, backButton, logoutButton;
-    private JLabel statusLabel;
+    private JLabel case_statusLabel;
     
     // Data
     private User user;
@@ -85,10 +85,10 @@ public class MyCasesPage extends JFrame implements ActionListener {
         JPanel buttonPanel = createButtonPanel();
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         
-        // Create status bar
-        statusLabel = new JLabel("Ready");
-        statusLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        mainPanel.add(statusLabel, BorderLayout.SOUTH);
+        // Create case_status bar
+        case_statusLabel = new JLabel("Ready");
+        case_statusLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        mainPanel.add(case_statusLabel, BorderLayout.SOUTH);
         
         // Load data
         loadOfficerId();
@@ -173,7 +173,7 @@ public class MyCasesPage extends JFrame implements ActionListener {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
             
-            PreparedStatement stmt = con.prepareStatement("SELECT officer_id FROM Officers WHERE user_id = ?");
+            PreparedStatement stmt = con.prepareStatement("SELECT officer_id FROM officer WHERE user_id = ?");
             stmt.setInt(1, user.getUserId());
             ResultSet rs = stmt.executeQuery();
             
@@ -197,7 +197,7 @@ public class MyCasesPage extends JFrame implements ActionListener {
     }
     
     private void loadCases() {
-        statusLabel.setText("Loading cases...");
+        case_statusLabel.setText("Loading cases...");
         
         // Clear existing panels
         pendingCasesPanel.removeAll();
@@ -218,12 +218,12 @@ public class MyCasesPage extends JFrame implements ActionListener {
             // Load new cases
             loadNewCases(con);
             
-            statusLabel.setText("Cases loaded successfully.");
+            case_statusLabel.setText("Cases loaded successfully.");
             
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error loading cases: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-            statusLabel.setText("Error loading cases.");
+            case_statusLabel.setText("Error loading cases.");
         } finally {
             try {
                 if (con != null) con.close();
@@ -245,7 +245,7 @@ public class MyCasesPage extends JFrame implements ActionListener {
         PreparedStatement stmt = con.prepareStatement(
             "SELECT cr.* FROM incident_report cr " +
             "JOIN officer_assigned_cases ca ON cr.report_id = ca.report_id " +
-            "WHERE ca.officer_id = ? AND cr.status NOT IN ('Closed', 'Resolved') " +
+            "WHERE ca.officer_id = ? AND cr.case_status NOT IN ('Closed', 'Resolved') " +
             "ORDER BY cr.timestamp DESC"
         );
         stmt.setInt(1, officerId);
@@ -256,11 +256,10 @@ public class MyCasesPage extends JFrame implements ActionListener {
             CrimeReport report = new CrimeReport(
                 rs.getInt("report_id"),
                 rs.getInt("citizen_id"),
-                rs.getString("crime_type"),
+                rs.getString("crime_category"),
                 rs.getString("description"),
                 rs.getString("location"),
-                rs.getString("evidence_url"),
-                rs.getString("status"),
+                rs.getString("case_status"),
                 rs.getString("timestamp")
             );
             
@@ -284,7 +283,7 @@ public class MyCasesPage extends JFrame implements ActionListener {
         PreparedStatement stmt = con.prepareStatement(
             "SELECT cr.* FROM incident_report cr " +
             "JOIN officer_assigned_cases ca ON cr.report_id = ca.report_id " +
-            "WHERE ca.officer_id = ? AND cr.status IN ('Closed', 'Resolved') " +
+            "WHERE ca.officer_id = ? AND cr.case_status IN ('Closed', 'Resolved') " +
             "ORDER BY cr.timestamp DESC LIMIT 20"
         );
         stmt.setInt(1, officerId);
@@ -295,11 +294,10 @@ public class MyCasesPage extends JFrame implements ActionListener {
             CrimeReport report = new CrimeReport(
                 rs.getInt("report_id"),
                 rs.getInt("citizen_id"),
-                rs.getString("crime_type"),
-                rs.getString("description"),
-                rs.getString("location"),
-                rs.getString("evidence_url"),
-                rs.getString("status"),
+                rs.getString("crime_category"),
+                rs.getString("incident_description"),
+                rs.getString("incident_region"),
+                rs.getString("case_status"),
                 rs.getString("timestamp")
             );
             
@@ -335,11 +333,10 @@ public class MyCasesPage extends JFrame implements ActionListener {
             CrimeReport report = new CrimeReport(
                 rs.getInt("report_id"),
                 rs.getInt("citizen_id"),
-                rs.getString("crime_type"),
+                rs.getString("crime_category"),
                 rs.getString("description"),
-                rs.getString("location"),
-                rs.getString("evidence_url"),
-                rs.getString("status"),
+                rs.getString("incident_region"),
+                rs.getString("case_status"),
                 rs.getString("timestamp")
             );
             
@@ -367,7 +364,7 @@ public class MyCasesPage extends JFrame implements ActionListener {
             BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
         
-        // Header with case ID and status
+        // Header with case ID and case_status
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
         
@@ -376,9 +373,9 @@ public class MyCasesPage extends JFrame implements ActionListener {
         idLabel.setForeground(accentColor);
         headerPanel.add(idLabel, BorderLayout.WEST);
         
-        JLabel statusLabel = new JLabel(report.getStatus());
-        statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        headerPanel.add(statusLabel, BorderLayout.EAST);
+        JLabel case_statusLabel = new JLabel(report.getcase_status());
+        case_statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        headerPanel.add(case_statusLabel, BorderLayout.EAST);
         
         panel.add(headerPanel, BorderLayout.NORTH);
         

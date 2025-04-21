@@ -118,7 +118,7 @@ public class CrimeReportPage extends JFrame implements ActionListener {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
 
-                PreparedStatement citizenStmt = con.prepareStatement("SELECT citizen_id FROM Citizens WHERE user_id = ?");
+                PreparedStatement citizenStmt = con.prepareStatement("SELECT citizen_id FROM Citizen WHERE user_id = ?");
                 citizenStmt.setInt(1, user.getUserId());
                 ResultSet rs = citizenStmt.executeQuery();
                 if (!rs.next()) {
@@ -128,13 +128,12 @@ public class CrimeReportPage extends JFrame implements ActionListener {
                 int citizenId = rs.getInt("citizen_id");
 
                 PreparedStatement stmt = con.prepareStatement(
-                    "INSERT INTO incident_report (citizen_id, crime_type, description, location, evidence_url, status) " +
-                    "VALUES (?, ?, ?, ?, ?, 'PENDING')");
+                    "INSERT INTO incident_report (citizen_id, crime_category, description ,incident_region, case_status) " +
+                    "VALUES (?, ?, ?, ?, 'Active')");
                 stmt.setInt(1, citizenId);
                 stmt.setString(2, crimeType);
                 stmt.setString(3, description);
                 stmt.setString(4, location);
-                stmt.setString(5, evidenceUrl.isEmpty() ? null : evidenceUrl);
                 int rows = stmt.executeUpdate();
 
                 if (rows > 0) {

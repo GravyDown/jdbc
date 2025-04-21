@@ -40,7 +40,7 @@ public class MyReportsPage extends JFrame implements ActionListener {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/cras", "root", "garvit27");
 
             PreparedStatement stmt = con.prepareStatement(
-                "SELECT * FROM incident_report WHERE citizen_id = (SELECT citizen_id FROM Citizens WHERE user_id = ?)");
+                "SELECT * FROM incident_report WHERE citizen_id = (SELECT citizen_id FROM Citizen WHERE user_id = ?)");
             stmt.setInt(1, user.getUserId());
             ResultSet rs = stmt.executeQuery();
 
@@ -49,11 +49,10 @@ public class MyReportsPage extends JFrame implements ActionListener {
                 reports.add(new CrimeReport(
                     rs.getInt("report_id"),
                     rs.getInt("citizen_id"),
-                    rs.getString("crime_type"),
+                    rs.getString("crime_category"),
                     rs.getString("description"),
-                    rs.getString("location"),
-                    rs.getString("evidence_url"),
-                    rs.getString("status"),
+                    rs.getString("incident_region"),
+                    rs.getString("case_status"),
                     rs.getString("timestamp")
                 ));
             }
@@ -62,7 +61,7 @@ public class MyReportsPage extends JFrame implements ActionListener {
             for (CrimeReport report : reports) {
                 sb.append("Report ID: ").append(report.getReportId())
                   .append(", Type: ").append(report.getCrimeType())
-                  .append(", Status: ").append(report.getStatus())
+                  .append(", case_status: ").append(report.getcase_status())
                   .append(", Timestamp: ").append(report.getTimestamp())
                   .append("\n");
             }

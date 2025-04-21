@@ -47,11 +47,11 @@ public class CrimeManagementPage extends JFrame implements ActionListener {
                 reports.add(new CrimeReport(
                     rs.getInt("report_id"),
                     rs.getInt("citizen_id"),
-                    rs.getString("crime_type"),
+                    rs.getString("crime_category"),
                     rs.getString("description"),
                     rs.getString("location"),
                     rs.getString("evidence_url"),
-                    rs.getString("status"),
+                    rs.getString("case_status"),
                     rs.getString("timestamp")
                 ));
             }
@@ -60,7 +60,7 @@ public class CrimeManagementPage extends JFrame implements ActionListener {
             for (CrimeReport report : reports) {
                 sb.append("Report ID: ").append(report.getReportId())
                   .append(", Type: ").append(report.getCrimeType())
-                  .append(", Status: ").append(report.getStatus())
+                  .append(", case_status: ").append(report.getcase_status())
                   .append(", Citizen ID: ").append(report.getCitizenId())
                   .append("\n");
             }

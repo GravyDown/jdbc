@@ -31,10 +31,10 @@ public class CrimeTrendsPage extends JFrame implements ActionListener {
     private void loadTrends() {
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT crime_type, COUNT(*) as count FROM incident_report GROUP BY crime_type")) {
+             ResultSet rs = stmt.executeQuery("SELECT crime_category, COUNT(*) as count FROM incident_report GROUP BY crime_category")) {
             StringBuilder sb = new StringBuilder();
             while (rs.next()) {
-                sb.append("Crime Type: ").append(rs.getString("crime_type"))
+                sb.append("Crime Type: ").append(rs.getString("crime_category"))
                   .append(", Count: ").append(rs.getInt("count"))
                   .append("\n");
             }
