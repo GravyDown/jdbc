@@ -258,7 +258,7 @@ public class MyCasesPage extends JFrame implements ActionListener {
                 rs.getInt("citizen_id"),
                 rs.getString("crime_category"),
                 rs.getString("description"),
-                rs.getString("location"),
+                rs.getString("incident_region"),
                 rs.getString("case_status"),
                 rs.getString("timestamp")
             );
@@ -295,7 +295,7 @@ public class MyCasesPage extends JFrame implements ActionListener {
                 rs.getInt("report_id"),
                 rs.getInt("citizen_id"),
                 rs.getString("crime_category"),
-                rs.getString("incident_description"),
+                rs.getString("description"),
                 rs.getString("incident_region"),
                 rs.getString("case_status"),
                 rs.getString("timestamp")

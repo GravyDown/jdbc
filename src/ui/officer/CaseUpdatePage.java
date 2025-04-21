@@ -29,7 +29,7 @@ public class CaseUpdatePage extends JFrame implements ActionListener {
         formPanel.add(reportIdField);
 
         formPanel.add(new JLabel("New case_status:"));
-        case_statusCombo = new JComboBox<>(new String[]{"PENDING", "UNDER_INVESTIGATION", "RESOLVED", "CLOSED"});
+        case_statusCombo = new JComboBox<>(new String[]{"CLOSED"});
         formPanel.add(case_statusCombo);
 
         add(formPanel, BorderLayout.CENTER);
@@ -77,7 +77,7 @@ public class CaseUpdatePage extends JFrame implements ActionListener {
                 // Verify the report is assigned to this officer
                 PreparedStatement checkStmt = con.prepareStatement(
                     "SELECT COUNT(*) FROM officer_assigned_cases WHERE report_id = ? AND officer_id = " +
-                    "(SELECT officer_id FROM Officers WHERE user_id = ?)");
+                    "(SELECT officer_id FROM Officer WHERE user_id = ?)");
                 checkStmt.setInt(1, reportId);
                 checkStmt.setInt(2, user.getUserId());
                 ResultSet rs = checkStmt.executeQuery();

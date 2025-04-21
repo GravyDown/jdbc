@@ -128,8 +128,8 @@ public class CrimeReportPage extends JFrame implements ActionListener {
                 int citizenId = rs.getInt("citizen_id");
 
                 PreparedStatement stmt = con.prepareStatement(
-                    "INSERT INTO incident_report (citizen_id, crime_category, description ,incident_region, case_status) " +
-                    "VALUES (?, ?, ?, ?, 'Active')");
+                "INSERT INTO incident_report (citizen_id, crime_category, description, incident_region, case_status) " +
+                "VALUES (?, ?, ?, ?, 'Active')", Statement.RETURN_GENERATED_KEYS);
                 stmt.setInt(1, citizenId);
                 stmt.setString(2, crimeType);
                 stmt.setString(3, description);
@@ -137,7 +137,38 @@ public class CrimeReportPage extends JFrame implements ActionListener {
                 int rows = stmt.executeUpdate();
 
                 if (rows > 0) {
-                    JOptionPane.showMessageDialog(this, "Report submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    ResultSet generatedKeys = stmt.getGeneratedKeys();
+                    int incidentId = -1;
+                    if (generatedKeys.next()) {
+                        incidentId = generatedKeys.getInt(1);
+                    }
+        
+                    // Find the officer with the least assigned cases
+                    PreparedStatement officerStmt = con.prepareStatement(
+                        "SELECT o.officer_id FROM officer o " +
+                        "LEFT JOIN officer_assigned_cases oa ON o.officer_id = oa.officer_id " +
+                        "GROUP BY o.officer_id ORDER BY COUNT(oa.report_id) ASC LIMIT 1");
+                    ResultSet officerRs = officerStmt.executeQuery();
+        
+                    if (officerRs.next()) {
+                        int officerId = officerRs.getInt("officer_id");
+        
+                        // Insert into officerassigned table
+                        PreparedStatement assignStmt = con.prepareStatement(
+                        "INSERT INTO officer_assigned_cases (officer_id, report_id) VALUES (?, ?)");
+                        assignStmt.setInt(1, officerId);
+                        assignStmt.setInt(2, incidentId);
+                        assignStmt.executeUpdate();
+                        
+                        PreparedStatement assignID = con.prepareStatement(
+                    "UPDATE incident_report SET officer_id = ? WHERE report_id = ?"
+                    );
+                        assignID.setInt(1, officerId);
+                        assignID.setInt(2, incidentId);
+                        assignID.executeUpdate();
+                }
+        
+                    JOptionPane.showMessageDialog(this, "Report submitted and assigned successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     crimeTypeField.setText("");
                     descriptionArea.setText("");
                     locationField.setText("");
@@ -160,15 +191,6 @@ public class CrimeReportPage extends JFrame implements ActionListener {
                     }
                 }
             }
-        } else if (e.getSource() == myReportsButton) {
-            new ui.citizens.MyReportsPage(user).setVisible(true);
-            this.dispose();
-        } else if (e.getSource() == feedbackButton) {
-            new ui.citizens.FeedbackPage(user).setVisible(true);
-            this.dispose();
-        } else if (e.getSource() == logoutButton) {
-            new ui.LoginPage().setVisible(true);
-            this.dispose();
         }
     }
 }
