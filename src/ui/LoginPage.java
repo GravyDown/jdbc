@@ -50,14 +50,14 @@ public class LoginPage extends JFrame implements ActionListener {
         loginButton = new JButton("Login");
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
         loginButton.setBackground(new Color(60, 179, 113));
-        loginButton.setForeground(Color.WHITE);
+        loginButton.setForeground(Color.blue);
         loginButton.addActionListener(this);
         buttonPanel.add(loginButton);
 
         registerButton = new JButton("Register");
         registerButton.setFont(new Font("Arial", Font.BOLD, 14));
         registerButton.setBackground(new Color(135, 206, 235));
-        registerButton.setForeground(Color.WHITE);
+        registerButton.setForeground(Color.black);
         registerButton.addActionListener(this);
         buttonPanel.add(registerButton);
 

@@ -8,8 +8,9 @@ import model.User;
 import util.DatabaseConnection;
 
 public class FeedbackPage extends JFrame implements ActionListener {
-    private JTextField categoryField, ratingField;
-    private JTextArea commentsArea;
+    private JComboBox<Long> reportIdDropdown;
+    private JTextField ratingField;
+    private JTextArea complaintArea;
     private JButton submitButton, backButton;
     private User user;
 
@@ -21,17 +22,18 @@ public class FeedbackPage extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setLayout(new GridLayout(5, 2, 5, 5));
 
-        add(new JLabel("Category:"));
-        categoryField = new JTextField();
-        add(categoryField);
+        add(new JLabel("Select Report ID:"));
+        reportIdDropdown = new JComboBox<>();
+        loadUserReports(); // Populate dropdown
+        add(reportIdDropdown);
 
-        add(new JLabel("Rating (1-5):"));
+        add(new JLabel("Star Rating (1-5):"));
         ratingField = new JTextField();
         add(ratingField);
 
-        add(new JLabel("Comments:"));
-        commentsArea = new JTextArea();
-        add(new JScrollPane(commentsArea));
+        add(new JLabel("Complaint:"));
+        complaintArea = new JTextArea();
+        add(new JScrollPane(complaintArea));
 
         submitButton = new JButton("Submit Feedback");
         submitButton.addActionListener(this);
@@ -42,18 +44,45 @@ public class FeedbackPage extends JFrame implements ActionListener {
         add(backButton);
     }
 
+    private void loadUserReports() {
+        try (Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(
+            "SELECT ir.report_id " +
+            "FROM incident_report ir " +
+            "JOIN citizen c ON ir.citizen_id = c.citizen_id " +
+            "WHERE c.user_id = ?"
+        );) {
+            stmt.setInt(1, user.getUserId());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                reportIdDropdown.addItem(rs.getLong("report_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading reports.");
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submitButton) {
             try (Connection conn = DatabaseConnection.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO Feedback (user_id, feedback_category, ratings, comments) VALUES (?, ?, ?, ?)")) {
-                stmt.setInt(1, user.getUserId());
-                stmt.setString(2, categoryField.getText());
-                stmt.setInt(3, Integer.parseInt(ratingField.getText()));
-                stmt.setString(4, commentsArea.getText());
+                     "INSERT INTO feedback (report_id, star_rating, complaint) VALUES (?, ?, ?)")) {
+
+                Long selectedReportId = (Long) reportIdDropdown.getSelectedItem();
+                int rating = Integer.parseInt(ratingField.getText());
+                String complaint = complaintArea.getText();
+
+                stmt.setLong(1, selectedReportId);
+                stmt.setInt(2, rating);
+                stmt.setString(3, complaint);
+
                 stmt.executeUpdate();
                 JOptionPane.showMessageDialog(this, "Feedback Submitted!");
+                ratingField.setText("");
+                complaintArea.setText("");
+
             } catch (SQLException | NumberFormatException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error submitting feedback!");

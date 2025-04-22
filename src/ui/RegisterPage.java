@@ -208,7 +208,7 @@ public class RegisterPage extends JFrame {
         registerButton = new JButton("REGISTER");
         registerButton.setFont(new Font("Arial", Font.BOLD, 16));
         registerButton.setBackground(accentColor);
-        registerButton.setForeground(Color.WHITE);
+        registerButton.setForeground(Color.black);
         registerButton.setFocusPainted(false);
         registerButton.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(160, 20, 35), 1),
@@ -216,7 +216,7 @@ public class RegisterPage extends JFrame {
         ));
         registerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         registerButton.setOpaque(true);
-        registerButton.setContentAreaFilled(true);
+        registerButton.setContentAreaFilled(false);
         registerButton.setBorderPainted(true);
         
         backButton = new JButton("BACK TO LOGIN");
@@ -437,8 +437,10 @@ public class RegisterPage extends JFrame {
                             adminStmt.close();
                             break;
                         case "OFFICER":
-                            PreparedStatement officerStmt = con.prepareStatement("INSERT INTO Officer (user_id, officer_region) VALUES (?, 'Central')");
+                            PreparedStatement officerStmt = con.prepareStatement("INSERT INTO Officer (user_id,officer_name,officer_phone, officer_region) VALUES (?, 'Central')");
                             officerStmt.setInt(1, userId);
+                            officerStmt.setString(2, name);
+                            officerStmt.setString(3, contact);
                             officerStmt.executeUpdate();
                             officerStmt.close();
                             break;

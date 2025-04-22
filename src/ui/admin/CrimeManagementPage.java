@@ -50,7 +50,6 @@ public class CrimeManagementPage extends JFrame implements ActionListener {
                     rs.getString("crime_category"),
                     rs.getString("description"),
                     rs.getString("location"),
-                    rs.getString("evidence_url"),
                     rs.getString("case_status"),
                     rs.getString("timestamp")
                 ));

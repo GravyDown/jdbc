@@ -58,35 +58,35 @@ public class CrimeReportPage extends JFrame implements ActionListener {
         resetButton = new JButton("Reset");
         resetButton.setFont(new Font("Arial", Font.BOLD, 14));
         resetButton.setBackground(new Color(255, 165, 0));
-        resetButton.setForeground(Color.WHITE);
+        resetButton.setForeground(Color.black);
         resetButton.addActionListener(this);
         buttonPanel.add(resetButton);
 
         submitButton = new JButton("Submit");
         submitButton.setFont(new Font("Arial", Font.BOLD, 14));
         submitButton.setBackground(new Color(60, 179, 113));
-        submitButton.setForeground(Color.WHITE);
+        submitButton.setForeground(Color.blue);
         submitButton.addActionListener(this);
         buttonPanel.add(submitButton);
 
         myReportsButton = new JButton("My Reports");
         myReportsButton.setFont(new Font("Arial", Font.BOLD, 14));
         myReportsButton.setBackground(new Color(135, 206, 235));
-        myReportsButton.setForeground(Color.WHITE);
+        myReportsButton.setForeground(Color.red);
         myReportsButton.addActionListener(this);
         buttonPanel.add(myReportsButton);
 
         feedbackButton = new JButton("Feedback");
         feedbackButton.setFont(new Font("Arial", Font.BOLD, 14));
         feedbackButton.setBackground(new Color(147, 112, 219));
-        feedbackButton.setForeground(Color.WHITE);
+        feedbackButton.setForeground(Color.black);
         feedbackButton.addActionListener(this);
         buttonPanel.add(feedbackButton);
 
         logoutButton = new JButton("Logout");
         logoutButton.setFont(new Font("Arial", Font.BOLD, 14));
         logoutButton.setBackground(new Color(220, 20, 60)); // Crimson for logout
-        logoutButton.setForeground(Color.WHITE);
+        logoutButton.setForeground(Color.black);
         logoutButton.addActionListener(this);
         buttonPanel.add(logoutButton);
 
@@ -102,7 +102,21 @@ public class CrimeReportPage extends JFrame implements ActionListener {
             descriptionArea.setText("");
             locationField.setText("");
             evidenceField.setText("");
-        } else if (e.getSource() == submitButton) {
+        } else if (e.getSource()==myReportsButton){
+            new MyReportsPage(user).setVisible(true);;
+
+        }
+        else if (e.getSource()==feedbackButton){
+            new FeedbackPage(user).setVisible(true);
+        }
+        // else if (e.getSource() == logoutButton) {
+        //     int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+        //     if (response == JOptionPane.YES_OPTION) {
+        //         new LoginPage().setVisible(true);
+        //         dispose();
+        //     }
+        // }
+        else if (e.getSource() == submitButton) {
             String crimeType = crimeTypeField.getText().trim();
             String description = descriptionArea.getText().trim();
             String location = locationField.getText().trim();
@@ -176,6 +190,7 @@ public class CrimeReportPage extends JFrame implements ActionListener {
                 } else {
                     JOptionPane.showMessageDialog(this, "Failed to submit report!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            
             } catch (ClassNotFoundException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "MySQL JDBC Driver not found!", "Error", JOptionPane.ERROR_MESSAGE);
